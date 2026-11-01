@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# A scanned QR link is a deep route into a single-page app, so every path has
+# to fall through to index.html or the diner gets a 404 at the table.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
