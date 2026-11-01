@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* overridden per restaurant from settings.primary_color */
+    --brand: #4b8061;
+    --brand-ink: #21372b;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ink-50 text-ink-900 font-sans antialiased;
+    /* keep the page from rubber-banding behind fixed bars on iOS */
+    overscroll-behavior-y: none;
+  }
+
+  /* Arabic needs a touch more line height and slightly looser tracking */
+  html.font-arabic body {
+    @apply leading-relaxed;
+    letter-spacing: 0;
+  }
+
+  html.font-arabic h1,
+  html.font-arabic h2,
+  html.font-arabic h3 {
+    letter-spacing: 0;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+
+  /* Latin headings get tightened tracking; Arabic never does */
+  html[lang='en'] h1 { letter-spacing: -0.02em; }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white;
+  }
+
+  /* numeric columns read better with tabular figures */
+  .tnum { font-variant-numeric: tabular-nums; }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-ink-100/70;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-ink-200 bg-white px-3.5 py-2.5 text-[15px]
+           text-ink-900 placeholder:text-ink-400
+           focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none
+           disabled:bg-ink-50 disabled:text-ink-400;
+  }
+
+  .label {
+    @apply block text-[13px] font-medium text-ink-600 mb-1.5;
+  }
+
+  .hint {
+    @apply text-[12px] text-ink-400 mt-1.5 leading-relaxed;
+  }
+
+  /* horizontal category rail that hides its scrollbar */
+  .rail {
+    @apply flex gap-2 overflow-x-auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x proximity;
+  }
+  .rail::-webkit-scrollbar { display: none; }
+
+  .skeleton {
+    @apply bg-ink-100 animate-pulse rounded-lg;
+  }
+
+  /* full-bleed sticky footer that respects the iPhone home indicator */
+  .sticky-bar {
+    @apply fixed inset-x-0 bottom-0 z-40 bg-white/95 backdrop-blur border-t border-ink-100;
+    padding-bottom: calc(0.75rem + var(--safe-bottom));
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+
+  /* mirror an icon that encodes direction (chevrons, arrows) under RTL */
+  [dir='rtl'] .flip-rtl { transform: scaleX(-1); }
+
+  .pb-safe { padding-bottom: calc(1rem + var(--safe-bottom)); }
+}
+
+/* Printing a sheet of table QR codes: drop the chrome, keep the grid */
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  body { background: #fff; }
+  .qr-sheet {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12mm !important;
+  }
+  .qr-card {
+    break-inside: avoid;
+    border: 1px solid #d1d1cb !important;
+    box-shadow: none !important;
+  }
+}
